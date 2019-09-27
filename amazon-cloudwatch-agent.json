@@ -6,6 +6,18 @@
     "debug": false,
     "run_as_user": "cwagent"
   },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/messages",
+            "log_group_name": "/var/log/messages"
+          }
+        ]
+      }
+    }
+  },
   "metrics": {
     "metrics_collected": {
       "cpu": {

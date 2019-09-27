@@ -99,7 +99,7 @@
       systemd:
         state: stopped
         enabled: yes
-        name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'Redhat' %}amazon-ssm-agent.service{% endif %}"
+        name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'RedHat' %}amazon-ssm-agent.service{% endif %}"
 
     - name: register ssm, echo no when already registered
       shell: echo no | /usr/bin/amazon-ssm-agent -register -code '{{ ssm_activation_code }}' -id '{{ ssm_activation_id }}' -region '{{ ssm_region }}'
@@ -108,7 +108,7 @@
     - name: start ssm systemd service
       systemd:
         state: started
-        name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'Redhat' %}amazon-ssm-agent.service{% endif %}"
+        name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'RedHat' %}amazon-ssm-agent.service{% endif %}"
 
     - name: cloudwatch agent load configuration file
       shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m onPremise -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s
