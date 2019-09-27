@@ -85,8 +85,9 @@
         enabled: yes
         name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'Redhat' %}amazon-ssm-agent.service{% endif %}"
 
-    - name: register ssm
-      shell: "amazon-ssm-agent -register -code '{{ ssm_activation_code }}' -id '{{ ssm_activation_id }}' -region '{{ ssm_region }}'"
+    - name: register ssm, echo no when already registered
+      shell: echo no | "amazon-ssm-agent -register -code '{{ ssm_activation_code }}' -id '{{ ssm_activation_id }}' -region '{{ ssm_region }}'"
+      ignore_errors: yes
 
     - name: start ssm systemd service
       systemd:
