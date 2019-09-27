@@ -8,7 +8,6 @@
   },
   "metrics": {
     "metrics_collected": {
-      "collectd": {},
       "cpu": {
         "resources": [
     "*"
@@ -40,15 +39,22 @@
         "resources": [
     "*"
         ],
-        "drop_device": true
+        "drop_device": true,
+        "metrics_collection_interval": 60
       },  
       "processes": {
         "measurement": [
     "running",
     "sleeping",
     "dead"
-        ]
-      }
+        ],
+        "metrics_collection_interval": 60
+      },
+      "mem": {
+        "measurement": [
+    "mem_used_percent"
+	],
+        "metrics_collection_interval": 60
     },
     "append_dimensions": {
       "ImageId": "${aws:ImageId}",
