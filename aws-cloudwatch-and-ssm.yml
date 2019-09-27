@@ -1,0 +1,94 @@
+---
+- name: aws-cloudwatch-and-ssm
+  hosts: '{{ target }}'
+  vars:
+  become: True
+  become_user: root
+  tasks:
+    - name: ca-certificates package (EL)
+      package:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+        - ca-certificates
+      when: ansible_os_family == 'RedHat'
+
+    - name: aws ca certificate (EL)
+      template:
+        src: aws.pem
+        dest: /etc/pki/ca-trust/source/anchors/aws.pem
+        owner: root
+        group: wheel
+        mode: '0555'
+      when: ansible_os_family == 'RedHat'
+
+    - name: update ca trust (EL)
+      shell: update-ca-trust
+      when: ansible_os_family == 'RedHat'
+
+    - name: ssm agent (EL)
+      yum:
+        name: 'https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm'
+        state: latest
+      when: ansible_os_family == 'RedHat'
+
+    - name: cloudwatch agent install (EL)
+      yum:
+        name: 'https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm'
+        state: latest
+      when: ansible_os_family == 'RedHat'
+
+    - name: ssm agent (UBUNTU)
+      snap:
+        name: amazon-ssm-agent
+        classic: yes
+      when: ansible_os_family == 'Debian'
+
+    - name: cloudwatch agent download (UBUNTU)
+      get_url:
+        url: https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+        dest: /tmp/amazon-cloudwatch-agent.deb
+      when: ansible_os_family == 'Debian'
+
+    - name: cloudwatch agent install (UBUNTU)
+      apt:
+        deb: /tmp/amazon-cloudwatch-agent.deb
+        state: latest
+      when: ansible_os_family == 'Debian'
+
+    - name: cloudwatch agent rm tmp (UBUNTU)
+      file:
+        path: /tmp/amazon-cloudwatch-agent.deb
+        state: absent
+      when: ansible_os_family == 'Debian'
+
+    - name: cloudwatch conf dir
+      file:
+        path: /opt/aws/amazon-cloudwatch-agent/etc
+        state: directory
+        mode: 0755
+        owner: root
+        group: wheel
+
+    - name: cloudwatch conf file
+      copy:
+        src: amazon-cloudwatch-agent.json
+        dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+        owner: root
+        group: wheel
+        mode: '0544'
+
+    - name: enable / stop ssm systemd service
+      systemd:
+        state: stopped
+        enabled: yes
+        name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'Redhat' %}amazon-ssm-agent.service{% endif %}"
+
+    - name: register ssm
+      shell: amazon-ssm-agent -register -code "{{ ssm_activation_code }}" -id "{{ ssm_activation_id }}" -region "{{ ssm_region }}"
+
+    - name: start ssm systemd service
+      systemd:
+        state: started
+        name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'Redhat' %}amazon-ssm-agent.service{% endif %}"
