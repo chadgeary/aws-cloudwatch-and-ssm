@@ -13,16 +13,13 @@
     "*"
         ],
         "measurement": [
-    {"name": "cpu_usage_idle", "rename": "CPU_USAGE_IDLE", "unit": "Percent"},
-    {"name": "cpu_usage_nice", "unit": "Percent"},
-    "cpu_usage_guest"
+          "cpu_usage_idle",
+          "cpu_usage_iowait",
+          "cpu_usage_user",
+          "cpu_usage_system"
         ],
         "totalcpu": false,
-        "metrics_collection_interval": 60,
-        "append_dimensions": {
-    "test": "test1",
-    "date": "2017-10-01"
-        }
+        "metrics_collection_interval": 60
       },
       "netstat": {
         "measurement": [
@@ -41,7 +38,7 @@
         ],
         "drop_device": true,
         "metrics_collection_interval": 60
-      },  
+      },
       "processes": {
         "measurement": [
     "running",
@@ -52,16 +49,10 @@
       },
       "mem": {
         "measurement": [
-    "mem_used_percent"
-	],
+         "mem_used_percent"
+        ],
         "metrics_collection_interval": 60
-    },
-    "append_dimensions": {
-      "ImageId": "${aws:ImageId}",
-      "InstanceId": "${aws:InstanceId}",
-      "InstanceType": "${aws:InstanceType}",
-      "AutoScalingGroupName": "${aws:AutoScalingGroupName}"
-    },
-    "aggregation_dimensions" : [["AutoScalingGroupName"], ["InstanceId", "InstanceType"],[]]
+      }
+    }
   }
 }
