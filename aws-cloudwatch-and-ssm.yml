@@ -76,8 +76,24 @@
         src: amazon-cloudwatch-agent.json
         dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
         owner: root
-        group: wheel
-        mode: '0544'
+        group: root
+        mode: '0440'
+
+    - name: cloudwatch common-config.toml file
+      copy:
+        src: common-config.toml
+        dest: /opt/aws/amazon-cloudwatch-agent/etc/common-config.toml
+        owner: root
+        group: root
+        mode: '0440'
+
+    - name: cloudwatch .cloudwatch_credentials file
+      template:
+        src: cloudwatch_credentials
+        dest: /opt/aws/amazon-cloudwatch-agent/etc/.cloudwatch_credentials
+        owner: root
+        group: root
+        mode: '0440'
 
     - name: enable / stop ssm systemd service
       systemd:
@@ -86,10 +102,13 @@
         name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'Redhat' %}amazon-ssm-agent.service{% endif %}"
 
     - name: register ssm, echo no when already registered
-      shell: echo no | "amazon-ssm-agent -register -code '{{ ssm_activation_code }}' -id '{{ ssm_activation_id }}' -region '{{ ssm_region }}'"
+      shell: echo no | "/usr/bin/amazon-ssm-agent -register -code '{{ ssm_activation_code }}' -id '{{ ssm_activation_id }}' -region '{{ ssm_region }}'"
       ignore_errors: yes
 
     - name: start ssm systemd service
       systemd:
         state: started
         name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'Redhat' %}amazon-ssm-agent.service{% endif %}"
+
+    - name: cloudwatch agent load configuration file
+      shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m onPremise -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s
