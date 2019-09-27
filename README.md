@@ -1,5 +1,5 @@
 # Reference
-Installs/registers SSM and Cloudwatch for CentOS 7 and Ubuntu 1804
+Installs/registers SSM and Cloudwatch for EL 6/7
 
 # Variables
 Must be supplied to complete installation/registration
@@ -12,9 +12,9 @@ ssm_region
 ```
 
 # IAM
+# EC2 Cloudwatch Access
+Creates an iam ec2 service role and attaches the cloudwatch policy
 ```
-# ec2 cloudwatch access - creates an iam ec2 service role and attaches the cloudwatch policy
-
 # ec2 role-policy-document
 EC2_CLOUDWATCH_ROLE_POLICY=$(mktemp)
 tee $EC2_CLOUDWATCH_ROLE_POLICY << EOM
@@ -45,9 +45,11 @@ aws ec2 associate-iam-instance-profile --instance-id i-0d9ca6934def7ad4c --iam-i
 
 # remove temporary role policy file
 rm $EC2_CLOUDWATCH_ROLE_POLICY
+```
 
-###
-# non ec2 ssm access - creates a policy to allow non-ec2 machines access to Systems Manager
+# Non-EC2 Systems Manager Access
+Creates a policy to allow non-ec2 machines access to Systems Manager
+```
 # ssm service policy
 SSM_SERVICE_ROLE_POLICY=$(mktemp)
 tee $SSM_SERVICE_ROLE_POLICY << EOM
@@ -69,10 +71,11 @@ aws iam attach-role-policy --role-name SSMServiceRole --policy-arn arn:aws:iam::
 
 # remove temporary service policy file
 rm $SSM_SERVICE_ROLE_POLICY
+```
 
-###
-# non ec2 cloudwatch access - creates an iam service account and attaches the cloudwatch policy
-
+# Non-EC2 Cloudwatch Access
+Creates an iam service account and attaches the cloudwatch policy
+```
 # the service account name
 NON_EC2_CLOUDWATCH='non_ec2_cloudwatch'
 

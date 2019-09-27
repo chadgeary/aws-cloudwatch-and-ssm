@@ -96,7 +96,7 @@
         mode: '0440'
 
     - name: enable / stop ssm systemd service
-      systemd:
+      service:
         state: stopped
         enabled: yes
         name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'RedHat' %}amazon-ssm-agent.service{% endif %}"
@@ -106,7 +106,7 @@
       ignore_errors: yes
 
     - name: start ssm systemd service
-      systemd:
+      service:
         state: started
         name: "{% if ansible_os_family == 'Debian' %}snap.amazon-ssm-agent.amazon-ssm-agent.service{% elif ansible_os_family == 'RedHat' %}amazon-ssm-agent.service{% endif %}"
 
