@@ -10,7 +10,7 @@
         "CommandRetryLimit": 15
     },
     "Ssm": {
-        "Endpoint": "ssm.us-east-2.amazonaws.com",
+        "Endpoint": "ssm.{{ aws_region }}.amazonaws.com",
         "HealthFrequencyMinutes": 5,
         "CustomInventoryDefaultLocation" : "",
         "AssociationLogsRetentionDurationHours" : 24,
@@ -24,7 +24,7 @@
         "SessionWorkersLimit" : 1000
     },
     "Agent": {
-        "Region": "us-east-2",
+        "Region": "{{ aws_region }}",
         "OrchestrationRootDir": ""
     },
     "Os": {
@@ -33,12 +33,12 @@
         "Version": "1"
     },
     "S3": {
-        "Endpoint": "s3.us-east-2.amazonaws.com",
-        "Region": "us-east-2",
+        "Endpoint": "s3.{{ aws_region }}.amazonaws.com",
+        "Region": "{{ aws_region }}",
         "LogBucket":"",
         "LogKey":""
     },
     "Kms": {
-        "Endpoint": "kms.us-east-2.amazonaws.com"
+        "Endpoint": "kms.{{ aws_region }}.amazonaws.com"
     }
 }
