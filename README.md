@@ -1,5 +1,5 @@
 # Reference
-Installs/registers SSM and Cloudwatch for EL 6/7
+Installs/registers SSM (Simple Service Manager) and Cloudwatch for EL 6/7
 
 # Variables
 Must be supplied to complete installation/registration
