@@ -12,6 +12,8 @@ ssm_region
 ```
 
 # IAM
+See https://docs.aws.amazon.com/systems-manager/latest/userguide/setup-instance-profile.html
+
 # EC2 Cloudwatch Access
 Creates an iam ec2 service role and attaches the cloudwatch policy
 ```
