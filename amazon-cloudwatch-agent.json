@@ -13,8 +13,13 @@
           {
             "file_path": "/var/log/messages",
             "log_group_name": "CWAgent",
-	    "log_stream_name": "/var/log/messages"
-          }
+	    "log_stream_name": "{{ ansible_nodename }}_/var/log/messages"
+          },
+	  {
+            "file_path": "/var/log/secure",
+	    "log_group_name": "CWAgent",
+	    "log_stream_name": "{{ ansible_nodename }}_/var/log/secure"
+	  }
         ]
       }
     }
