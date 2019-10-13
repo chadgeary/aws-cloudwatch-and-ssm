@@ -1,7 +1,7 @@
 {
   "agent": {
     "metrics_collection_interval": 60,
-    "region": "us-east-1",
+    "region": "us-east-2",
     "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
     "debug": false,
     "run_as_user": "root"
@@ -12,8 +12,8 @@
         "collect_list": [
           {
             "file_path": "/var/log/messages",
-            "log_group_name": "/var/log/messages",
-	    "log_stream_name": "messages"
+            "log_group_name": "CWAgent",
+	    "log_stream_name": "/var/log/messages"
           }
         ]
       }
