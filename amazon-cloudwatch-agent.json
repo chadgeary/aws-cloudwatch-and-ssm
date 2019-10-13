@@ -1,7 +1,7 @@
 {
   "agent": {
     "metrics_collection_interval": 60,
-    "region": "us-east-2",
+    "region": "{{ ssm_region }}",
     "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
     "debug": false,
     "run_as_user": "root"
