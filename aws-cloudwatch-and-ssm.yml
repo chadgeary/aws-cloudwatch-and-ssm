@@ -72,7 +72,7 @@
         group: wheel
 
     - name: cloudwatch conf file
-      copy:
+      template:
         src: amazon-cloudwatch-agent.json
         dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
         owner: root
